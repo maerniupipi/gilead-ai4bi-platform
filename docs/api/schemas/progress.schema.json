@@ -1,0 +1,79 @@
+{
+  "description": "data in a finished progress node; start omits terminal fields.",
+  "properties": {
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "node_id": {
+      "title": "Node Id",
+      "type": "string"
+    },
+    "node_type": {
+      "const": "progress",
+      "enum": [
+        "progress"
+      ],
+      "title": "Node Type",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "index": {
+      "title": "Index",
+      "type": "integer"
+    },
+    "created_at": {
+      "title": "Created At",
+      "type": "integer"
+    },
+    "status": {
+      "enum": [
+        "succeeded",
+        "failed"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "error": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Error"
+    },
+    "outputs": {
+      "title": "Outputs",
+      "type": "null"
+    },
+    "elapsed_time": {
+      "title": "Elapsed Time",
+      "type": "number"
+    },
+    "finished_at": {
+      "title": "Finished At",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "id",
+    "node_id",
+    "node_type",
+    "title",
+    "index",
+    "created_at",
+    "status",
+    "error",
+    "outputs",
+    "elapsed_time",
+    "finished_at"
+  ],
+  "title": "ProgressNode",
+  "type": "object"
+}

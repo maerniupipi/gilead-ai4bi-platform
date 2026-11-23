@@ -1,0 +1,20 @@
+.env
+.env*
+# 勿把分环境密钥打进镜像；运行时由编排注入或使用 DOTENV_PATH 挂载
+config/environments/dev.env
+config/environments/uat.env
+config/environments/prod.env
+__pycache__/
+*.pyc
+.pytest_cache/
+tests/
+docs/
+*.log
+logs/
+.venv/
+venv/
+data/
+# Cython compilation artifacts (prevent local build outputs from entering context)
+*.so
+*.c
+build/

@@ -1,0 +1,37 @@
+# Chat-BI 后端：FastAPI + SQLAlchemy，知识库/数据源/认证/模型供应商/聊天/AutoBI 项目等 API。
+# 目录与分层说明见：后端项目结构说明.md；变更见仓库根目录 变更日志.md
+# Python 版本：3.13.0（建议 >= 3.11）
+fastapi==0.135.1
+uvicorn==0.42.0
+sqlalchemy==2.0.34
+pydantic==2.8.2
+pydantic-settings==2.6.1
+python-dotenv>=1.0.1,<2.0.0
+mysql-connector-python==9.6.0
+pymilvus==2.5.0
+# pymilvus 2.5 imports pkg_resources at runtime.
+setuptools>=68,<81
+itsdangerous>=2.2,<3
+elasticsearch==8.12.0
+opensearch-py>=2.8,<4
+redis==5.2.1
+httpx==0.28.1
+pymysql==1.1.2
+psycopg2-binary==2.9.10
+RestrictedPython==8.0
+# XLSX 表格智能问答工具：OSS 上传 / Excel 解析 / 类型推断 / SQL 安全校验
+oss2==2.19.1
+boto3==1.37.0
+azure-storage-blob==12.26.0
+azure-search-documents==11.6.0
+openpyxl==3.1.5
+pandas==2.2.3
+sqlparse==0.5.1
+sqlglot==30.23.0
+python-multipart==0.0.20
+# 数据同步定时计划的 IANA 时区数据库（兼容不含系统 tzdata 的镜像）
+tzdata>=2024.1,<2028
+# PPT 导出（XLSX 问答会话 → .pptx 下载）
+python-pptx==1.0.2
+Pillow>=10.4,<12.0
+reportlab==4.2.5

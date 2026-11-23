@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>评测批量执行台</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script defer src="/static/view.js"></script>
+  <script defer src="/static/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">B</span><span>批量执行台 <small>EXCEL → AGENT</small></span></div>
+    <div class="account-bar"><span id="account-status" class="local-badge"><i></i> 正在连接工作台</span><button id="logout" type="button">退出登录</button></div>
+  </header>
+  <main>
+    <div class="page-heading">
+      <p class="eyebrow">AGENT WORKSPACE</p>
+      <h1>评测集批量执行台</h1>
+      <p class="subtitle">上传 Excel，批量运行评测问题。SQL、回答与 TraceID 自动写入 H / I / J 列，历史任务随时下载。</p>
+    </div>
+    <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+    <section class="command-bar" aria-label="加载与执行">
+      <div class="command-source">
+        <label for="workbook-file">评测文件 / .xlsx</label>
+        <div class="source-row upload-row"><input id="workbook-file" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" aria-describedby="upload-hint"></div>
+        <div id="local-path-section" hidden><label for="source_path">本机原文件绝对路径（可选）</label><div class="source-row">
+          <input id="source_path" type="text" placeholder="例如 D:\数据\问题.xlsx" spellcheck="false" autocomplete="off">
+          <button id="load-path" class="secondary" type="button">加载</button>
+        </div></div>
+      </div>
+      <div class="command-params">
+        <label>问题起始行<input id="start_row" type="number" min="1" max="1048576" value="2"></label>
+        <label>并发数量<input id="concurrency" type="number" min="1" max="32" value="3"></label>
+      </div>
+      <div class="command-actions">
+        <button id="preview" class="secondary" disabled>预览问题</button>
+        <button id="run" class="primary" disabled>开始执行 <span>↗</span></button>
+      </div>
+      <p id="upload-hint" class="hint">支持 20 MB 以内的 .xlsx；上传后选择工作表并预览。原始上传文件保留备份，执行结果逐题保存到服务器。</p>
+    </section>
+    <section class="card history-panel" aria-label="历史跑批记录">
+      <div class="table-heading"><div><p class="eyebrow">BATCH ARCHIVE</p><h2>历史跑批记录 <span id="history-total" class="muted">0</span></h2></div><button id="history-refresh" class="secondary">刷新记录</button></div>
+      <div class="filters history-filters">
+        <input id="history-query" type="search" placeholder="搜索任务名称、文件名或任务 ID" aria-label="搜索历史任务">
+        <select id="history-status" aria-label="历史任务状态"><option value="">全部状态</option><option value="running">执行中</option><option value="stopping">停止中</option><option value="completed">已完成</option><option value="stopped">已停止</option><option value="failed">失败</option><option value="interrupted">已中断</option></select>
+        <select id="history-archive" aria-label="归档状态"><option value="false">最近任务</option><option value="true">已归档</option></select>
+      </div>
+      <div class="table-scroll history-scroll"><table><thead><tr><th>任务 / 文件</th><th>创建时间</th><th>执行状态</th><th>成功 / 总数</th><th>操作与下载</th></tr></thead><tbody id="history-rows"><tr><td colspan="5" class="empty">正在读取历史记录…</td></tr></tbody></table></div>
+      <div class="pagination"><span id="history-page">0 条记录</span><div><button id="history-prev" disabled>上一页</button><button id="history-next" disabled>下一页</button></div></div>
+      <p class="history-note hint">归档仅整理历史列表，原始文件和结果仍可下载；在「已归档」中可恢复记录。</p>
+    </section>
+    <div class="workspace">
+      <aside>
+        <section class="card">
+          <div class="section-heading"><span class="step">01</span><h2>选择 sheet</h2></div>
+          <div class="sheet-heading"><strong>工作表</strong><label class="check"><input id="select-all" type="checkbox" disabled>全选</label></div>
+          <div id="sheets" class="sheet-list"><p class="muted">加载后显示工作表</p></div>
+          <label class="check overwrite"><input id="overwrite" type="checkbox">覆盖 H / I / J 列已有内容</label>
+          <p class="hint">目标行 H/I/J 任一已有内容默认整行跳过；勾选后覆盖三列。空白问题自动忽略。</p>
+        </section>
+        <section class="card">
+          <div class="section-heading"><span class="step">02</span><h2>接口与请求配置</h2></div>
+          <label>已保存接口<select id="endpoint-profile" disabled><option value="">新配置 / 当前输入</option></select></label>
+          <label>接口 URL<input id="url" type="url" placeholder="http://host/api/agent-chat/sse"></label>
+          <div class="inline-fields"><label>app_id<input id="app_id" type="number" min="1"></label><label>version_id<input id="version_id" type="number" min="1"></label></div>
+          <label>配置名称（可选）<input id="profile-name" type="text" placeholder="例如：测试环境 v35"></label>
+          <button id="save-profile" class="secondary" disabled>保存当前接口配置</button>
+          <p id="profile-hint" class="hint" role="status">配置保存在当前浏览器；开始执行时也会自动记住。请勿在名称或 URL 中填写密钥。</p>
+          <details><summary>更多配置 <span>caller / 超时 / 请求头</span></summary>
+            <label>caller<input id="caller" type="text"></label>
+            <label>channel<input id="channel" type="text"></label>
+            <div class="inline-fields"><label>连接超时 / 秒<input id="connect_timeout" type="number" min="1"></label><label>读取空闲 / 秒<input id="read_timeout" type="number" min="1"></label></div>
+            <label>单行总时限 / 秒<input id="total_timeout" type="number" min="1"></label>
+            <label>自定义请求头 / JSON<textarea id="headers" rows="3" spellcheck="false" autocomplete="off">{}</textarea></label>
+            <p class="hint">认证信息仅在当前内存中使用，不保存到配置或任务日志。</p>
+          </details>
+          <p class="hint">只有点击「开始执行」后才会调用配置的远端接口。</p>
+        </section>
+      </aside>
+      <div class="results">
+        <section class="card overview">
+          <div class="overview-title"><div><p class="eyebrow">EXECUTION</p><h2 id="job-title">准备执行</h2></div><button id="stop" class="danger" disabled>停止派发</button></div>
+          <p id="job-subtitle" class="muted">上传评测文件并选择工作表，自动预览待执行的问题。</p>
+          <div class="metrics"><div><span>问题总数</span><strong id="metric-total">—</strong></div><div><span>执行成功</span><strong id="metric-success">0</strong></div><div><span>失败 / 中断</span><strong id="metric-failed">0</strong></div><div><span>运行中</span><strong id="metric-running">0</strong></div></div>
+          <progress id="progress" max="100" value="0"></progress>
+          <div class="progress-meta"><span id="progress-text">尚未开始</span><span id="overflow-text"></span></div>
+        </section>
+        <section class="card table-card">
+          <div class="table-heading"><h2>问题与结果</h2><div class="downloads"><button id="export" class="secondary" disabled>下载已保存 Excel</button><button id="logs" class="secondary" disabled>完整日志</button></div></div>
+          <div class="filters">
+            <input id="search" type="search" placeholder="搜索问题或执行过程" aria-label="搜索问题或执行过程">
+            <select id="sheet-filter" aria-label="筛选 sheet"><option value="">全部 sheet</option></select>
+            <select id="status-filter" aria-label="筛选状态"><option value="">全部状态</option><option value="pending">待执行</option><option value="running">执行中</option><option value="success">成功</option><option value="failed">失败</option><option value="skipped">已跳过</option><option value="invalid">不可执行</option><option value="cancelled">未执行</option><option value="interrupted">已中断</option></select>
+          </div>
+          <div class="table-scroll"><table><thead><tr><th>位置</th><th>原始问题 / G</th><th>状态</th><th>耗时</th><th>结果 / H·I·J</th></tr></thead><tbody id="rows"><tr><td colspan="5"><div class="empty"><span>G → H·I·J</span><strong>还没有执行记录</strong><p>从上方上传评测文件开始。</p></div></td></tr></tbody></table></div>
+          <div class="pagination"><span id="row-count">0 条记录</span><div><button id="prev" disabled>上一页</button><button id="next" disabled>下一页</button></div></div>
+        </section>
+        <section class="history-bar"><label for="history">快速打开任务</label><select id="history"><option value="">选择历史任务</option></select><button id="refresh-history">刷新</button></section>
+        <p class="footnote">停止派发后，正在执行的请求会继续至完成或超时。H 列写 SQL、I 列写最终回答、J 列写所有实验室 TraceID。每列独立检查容量，完整内容保留在日志中。</p>
+      </div>
+    </div>
+  </main>
+  <dialog id="rename-dialog"><form id="rename-form" class="rename-form"><p class="eyebrow">EDIT BATCH</p><h2>重命名任务</h2><label for="rename-title">任务名称<input id="rename-title" maxlength="200" required></label><p id="rename-error" class="notice error" hidden role="alert"></p><div class="rename-actions"><button id="rename-cancel" type="button">取消</button><button id="rename-save" class="primary" type="submit">保存名称</button></div></form></dialog>
+  <dialog id="detail">
+    <div class="detail-shell">
+      <div class="detail-heading"><div><p class="eyebrow">FULL EXECUTION TRACE</p><h2 id="detail-title">执行过程</h2></div><button id="close-detail" aria-label="关闭详情">关闭 ×</button></div>
+      <p id="detail-question"></p>
+      <p id="detail-meta" class="muted"></p>
+      <div id="detail-split" hidden>
+        <section class="detail-block"><h3 class="detail-block-title">SQL</h3><pre id="detail-sql"></pre></section>
+        <section class="detail-block"><h3 class="detail-block-title">最终回答</h3><pre id="detail-answer"></pre></section>
+        <section class="detail-block" id="detail-traces-block" hidden><h3 class="detail-block-title">实验室 TraceID / J</h3><pre id="detail-traces"></pre></section>
+        <section class="detail-block"><h3 class="detail-block-title">完整过程</h3><pre id="detail-process"></pre></section>
+      </div>
+      <pre id="detail-output"></pre>
+    </div>
+  </dialog>
+</body>
+</html>

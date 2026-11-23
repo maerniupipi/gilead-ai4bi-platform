@@ -1,0 +1,82 @@
+{
+  "$defs": {
+    "ResultColumn": {
+      "additionalProperties": true,
+      "properties": {
+        "key": {
+          "title": "Key",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "key",
+        "name"
+      ],
+      "title": "ResultColumn",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "enum": [
+        "1.0"
+      ],
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "columns": {
+      "items": {
+        "$ref": "#/$defs/ResultColumn"
+      },
+      "title": "Columns",
+      "type": "array"
+    },
+    "rows": {
+      "items": {
+        "type": "object"
+      },
+      "maxItems": 50,
+      "title": "Rows",
+      "type": "array"
+    },
+    "total_rows": {
+      "minimum": 0,
+      "title": "Total Rows",
+      "type": "integer"
+    },
+    "truncated": {
+      "title": "Truncated",
+      "type": "boolean"
+    },
+    "data_ref": {
+      "format": "uuid",
+      "title": "Data Ref",
+      "type": "string"
+    },
+    "can_export": {
+      "title": "Can Export",
+      "type": "boolean"
+    },
+    "sortable": {
+      "title": "Sortable",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "columns",
+    "rows",
+    "total_rows",
+    "truncated",
+    "data_ref",
+    "can_export",
+    "sortable"
+  ],
+  "title": "TableOutputs",
+  "type": "object"
+}

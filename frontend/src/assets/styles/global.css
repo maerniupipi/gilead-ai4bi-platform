@@ -1,0 +1,296 @@
+/* ===== Reset ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ===== Design Tokens ===== */
+:root {
+  /* Primary brand (ChatBI / Eval default) */
+  --el-color-primary: #1fb8cc;
+  --el-color-primary-rgb: 31, 184, 204;
+  --el-color-primary-light-3: #62cdd9;
+  --el-color-primary-light-5: #8fdce6;
+  --el-color-primary-light-7: #bceaf0;
+  --el-color-primary-light-8: #d2f1f5;
+  --el-color-primary-light-9: #e9f8fa;
+  --el-color-primary-dark-2: #1993a3;
+
+  /* Neutrals */
+  --color-white:    #ffffff;
+  --color-gray-50:  #f8f9fb;
+  --color-gray-100: #f1f3f8;
+  --color-gray-200: #e8eaef;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #5c6370;
+  --color-gray-700: #303133;
+  --color-gray-900: #1a1d23;
+
+  /* Functional */
+  --color-success:      #22c55e;
+  --color-success-bg:   #f0fdf4;
+  --color-warning:      #e6a23c;
+  --color-warning-bg:   #fffbeb;
+  --color-danger:       #ef4444;
+  --color-danger-bg:    #fef2f2;
+
+  /* Module brands */
+  --brand-chatbi:        #1fb8cc;
+  --brand-chatbi-soft:   #e9f8fa;
+  --brand-chatbi-border: #bceaf0;
+  --brand-agent:         #3d8d82;
+  --brand-agent-soft:    #e8f4f1;
+  --brand-agent-border:  #b8d9d2;
+  --brand-mgmt:          #e6a23c;
+  --brand-mgmt-soft:     #faecd8;
+  --brand-mgmt-border:   #f5d9ab;
+  --brand-eval:          #1fb8cc;
+  --brand-eval-soft:     #e9f8fa;
+  --brand-eval-border:   #bceaf0;
+
+  /* Shadows */
+  --shadow-xs:  0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md:  0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg:  0 8px 30px rgba(0, 0, 0, 0.10);
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  /* Spacing (4px scale) */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+
+  /* Typography */
+  --text-xs:   11px;
+  --text-sm:   13px;
+  --text-base: 14px;
+  --text-lg:   16px;
+  --text-xl:   20px;
+
+  /* Transitions */
+  --transition-fast:   150ms ease;
+  --transition-normal: 220ms ease;
+
+  /* ===== Backward-compat aliases (pages still reference these names) ===== */
+  --bg-primary:     var(--color-gray-50);
+  --bg-secondary:   var(--color-white);
+  --bg-tertiary:    var(--color-gray-100);
+  --bg-surface:     var(--color-white);
+  --bg-hover:       var(--color-gray-100);
+  --border-color:   var(--color-gray-200);
+  --text-primary:   var(--color-gray-900);
+  --text-secondary: var(--color-gray-500);
+  --text-muted:     var(--color-gray-400);
+  --accent-color:   var(--el-color-primary);
+  --accent-light:   var(--brand-chatbi-soft);
+  --accent-hover:   var(--el-color-primary-dark-2);
+
+  /* Card shadows (include 1px border trick for visible card frames) */
+  --card-shadow:        0 1px 3px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+  --card-shadow-hover:  0 8px 30px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.06);
+  --card-shadow-active: 0 4px 16px rgba(0,0,0,0.08);
+
+  /* Card accent colors */
+  --color-amber:        #d97706;
+  --color-amber-bg:     #fffbeb;
+  --color-amber-border: #fcd34d;
+  --color-cyan:         #0891b2;
+  --color-cyan-bg:      #ecfeff;
+  --color-cyan-border:  #67e8f9;
+  --color-violet:       #7c3aed;
+  --color-violet-bg:    #faf5ff;
+  --color-violet-border:#c4b5fd;
+}
+
+/* ===== 全局字体 ===== */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif;
+  color: var(--color-gray-700);
+  font-size: var(--text-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== 布局 ===== */
+#app {
+  width: 100%;
+  height: 100vh;
+}
+
+.app-root-shell {
+  height: 100vh;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.app-inner-shell {
+  flex: 1;
+  min-height: 0;
+}
+
+.app-main {
+  flex: 1;
+  min-height: 0;
+  background-color: var(--color-gray-50);
+  --el-main-padding: 0 20px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 页面根容器统一撑满 */
+.app-main > * {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+/* el-card 内容区撑满 */
+.app-main .el-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main .el-card :deep(.el-card__body) {
+  flex: 1;
+  overflow: auto;
+}
+
+.app-main-immersive {
+  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ===== 侧边栏 ===== */
+.app-aside {
+  background-color: var(--color-white);
+  border-right: 1px solid var(--color-gray-200);
+  overflow-x: hidden;
+}
+
+.aside-menu-wrap {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 60px);
+  overflow-x: hidden;
+}
+
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  overflow-x: hidden;
+}
+
+.menu-main {
+  flex: 1;
+  min-height: 0;
+  border-right: none !important;
+  --el-menu-active-color: var(--el-color-primary);
+}
+
+/* ===== Breadcrumb (legacy — being replaced by PageHeader.vue) ===== */
+/* Kept for backward compat during migration; remove once all pages use <PageHeader> */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 20px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--color-gray-200);
+  background-color: transparent;
+  min-height: 48px;
+}
+
+.page-header-icon {
+  color: var(--color-gray-400);
+  font-size: 16px;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+/* ===== 其他 ===== */
+.el-dropdown-link {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+/* 智能体工作室：主内容区无默认 padding，与内置侧栏布局衔接 */
+.app-main-agent {
+  padding: 0 !important;
+  /* Element Plus el-main 仍可能用变量加内边距，一并清零 */
+  --el-main-padding: 0px;
+}
+
+/**
+ * Module theme activation — set on <body> by UnifiedLayout
+ */
+body[data-module="chatbi"],
+body[data-module="eval"] {
+  --el-color-primary: var(--brand-chatbi);
+  --el-color-primary-rgb: 31, 184, 204;
+  --el-color-primary-light-3: #62cdd9;
+  --el-color-primary-light-5: #8fdce6;
+  --el-color-primary-light-7: #bceaf0;
+  --el-color-primary-light-8: #d2f1f5;
+  --el-color-primary-light-9: #e9f8fa;
+  --el-color-primary-dark-2: #1993a3;
+}
+
+body[data-module="agent"] {
+  --el-color-primary: var(--brand-agent);
+  --el-color-primary-rgb: 61, 141, 130;
+  --el-color-primary-light-3: #5cad9f;
+  --el-color-primary-light-5: #8fc4ba;
+  --el-color-primary-light-7: #b8d9d2;
+  --el-color-primary-light-8: #d1e8e3;
+  --el-color-primary-light-9: #e8f4f1;
+  --el-color-primary-dark-2: #2f7269;
+}
+
+body[data-module="management"] {
+  --el-color-primary: var(--brand-mgmt);
+  --el-color-primary-rgb: 230, 162, 60;
+  --el-color-primary-light-3: #ebb563;
+  --el-color-primary-light-5: #f0c78a;
+  --el-color-primary-light-7: #f5d9ab;
+  --el-color-primary-light-8: #f8e5c4;
+  --el-color-primary-light-9: #faecd8;
+  --el-color-primary-dark-2: #c78a32;
+}
+
+/* Shell overrides for side-panel layouts */
+.app-main-agent > .agent-platform-root {
+  flex-direction: row;
+}
+
+.app-main-management {
+  padding: 0 !important;
+  --el-main-padding: 0px;
+}
+
+.app-main-management > .management-center-root {
+  flex-direction: row;
+}
+
+/* Legacy body classes — keep for backward compat */
+body.agent-platform-active {
+  --el-color-primary: var(--brand-agent);
+  --el-color-primary-rgb: 61, 141, 130;
+}
+body.management-center-active {
+  --el-color-primary: var(--brand-mgmt);
+  --el-color-primary-rgb: 230, 162, 60;
+}

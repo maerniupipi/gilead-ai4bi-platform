@@ -1,0 +1,71 @@
+name: ai4bi-platform
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-ai4bi}
+      MYSQL_USER: ${MYSQL_USER:-ai4bi}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+  platform-backend:
+    stop_grace_period: 60s
+    build:
+      context: ../backend
+    image: ${BACKEND_IMAGE:-ai4bi-platform/backend:local}
+    env_file:
+      - ./env/platform-backend.env
+    environment:
+      APP_ENV: prod
+      DATABASE_URL: mysql+mysqlconnector://${MYSQL_USER:-ai4bi}:${MYSQL_PASSWORD:?Set MYSQL_PASSWORD}@mysql:3306/${MYSQL_DATABASE:-ai4bi}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_USERNAME: ""
+      REDIS_PASSWORD: ""
+      PORT: 8000
+      RELOAD: "false"
+      CHATBI_ENV: prod
+      CHATBI_STORAGE_DIR: /app/data/exports
+      CHATBI_EXPORT_WORKER_ENABLED: "true"
+      DATA_SYNC_TMP_DIR: /app/data/sync
+    volumes:
+      - platform-data:/app/data
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+  platform-frontend:
+    build:
+      context: ../frontend
+      args:
+        VITE_PASSWORD_ENCRYPTION_KEY: ${PASSWORD_ENCRYPTION_KEY:?Set PASSWORD_ENCRYPTION_KEY}
+    image: ${FRONTEND_IMAGE:-ai4bi-platform/frontend:local}
+    environment:
+      BACKEND_UPSTREAM: http://platform-backend:8000
+    ports:
+      - "${FRONTEND_PORT:-8080}:80"
+      - "${SHARE_PORT:-3840}:3840"
+    depends_on:
+      - platform-backend
+    restart: unless-stopped
+volumes:
+  mysql-data:
+  redis-data:
+  platform-data:

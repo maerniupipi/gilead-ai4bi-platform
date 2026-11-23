@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>登录 · 评测批量执行台</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script defer src="/static/login.js"></script>
+</head>
+<body class="login-page">
+  <main class="login-layout">
+    <section class="login-intro">
+      <div class="brand"><span class="brand-mark">B</span><span>评测批量执行台</span></div>
+      <p class="eyebrow">EVALUATION WORKSPACE / 01</p>
+      <h1>一次上传，<br>每次执行都有记录。</h1>
+      <p>批量运行评测问题，保存 SQL、回答与执行过程。<br>登录后即可查看进度、管理历史并下载结果。</p>
+      <div class="login-flow"><span>G<small>原始问题</small></span><b>→</b><span>H<small>完整 SQL</small></span><span>I<small>最终回答</small></span><span>J<small>TraceID</small></span></div>
+    </section>
+    <section class="login-card card">
+      <p class="eyebrow">WELCOME BACK</p>
+      <h2>登录工作台</h2>
+      <p class="muted">使用管理员账号继续</p>
+      <form id="login-form">
+        <label for="username">账号<input id="username" name="username" autocomplete="username" value="admin" maxlength="64" required></label>
+        <label for="password">密码<input id="password" name="password" type="password" autocomplete="current-password" maxlength="256" required autofocus></label>
+        <p id="login-error" class="notice error" role="alert" hidden></p>
+        <button id="login-submit" class="primary" type="submit">登录 <span>↗</span></button>
+      </form>
+      <p class="hint">会话有效期 12 小时。使用完毕可在工作台退出登录。</p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,102 @@
+server {
+    listen 80;
+    server_name _;
+    port_in_redirect off;
+    client_max_body_size 50M;
+
+    root /usr/share/nginx/html/dist;
+    index index.html;
+
+    location /api/service/ {
+        proxy_pass ${BACKEND_UPSTREAM}/api/service/;
+        proxy_buffering off;
+        proxy_request_buffering off;
+        proxy_cache off;
+        gzip off;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        proxy_set_header Accept-Encoding "";
+        add_header X-Accel-Buffering no always;
+        add_header Cache-Control "no-cache, no-transform" always;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 660s;
+        proxy_send_timeout 660s;
+    }
+
+    location /api/ {
+        proxy_buffering off;
+        proxy_pass ${BACKEND_UPSTREAM}/api/;
+        proxy_redirect off;
+        proxy_request_buffering off;
+        proxy_read_timeout 300s;
+        proxy_send_timeout 300s;
+        proxy_set_header Host $host:$server_port;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /autobi/ {
+        proxy_pass ${BACKEND_UPSTREAM}/api/autobi/;
+        proxy_redirect off;
+        proxy_buffering off;
+        proxy_read_timeout 300s;
+        proxy_send_timeout 300s;
+        proxy_set_header Host $host:$server_port;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location ~ /\. {
+        deny all;
+    }
+}
+
+server {
+    listen 3840;
+    server_name _;
+    port_in_redirect off;
+    client_max_body_size 50M;
+
+    root /usr/share/nginx/html/dist-share;
+    index share.html index.html;
+
+    location /api/ {
+        proxy_buffering off;
+        proxy_pass ${BACKEND_UPSTREAM}/api/;
+        proxy_redirect off;
+        proxy_request_buffering off;
+        proxy_read_timeout 300s;
+        proxy_send_timeout 300s;
+        proxy_set_header Host $host:$server_port;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /autobi/ {
+        proxy_pass ${BACKEND_UPSTREAM}/api/autobi/;
+        proxy_redirect off;
+        proxy_buffering off;
+        proxy_read_timeout 300s;
+        proxy_send_timeout 300s;
+        proxy_set_header Host $host:$server_port;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location / {
+        try_files $uri $uri/ /share.html;
+    }
+
+    location ~ /\. {
+        deny all;
+    }
+}

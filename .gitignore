@@ -1,0 +1,26 @@
+# Runtime secrets and generated files
+.env
+.env.*
+!.env.example
+*.env
+!*.env.example
+secrets/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+node_modules/
+dist/
+dist-share/
+.pytest_cache/
+.coverage
+*.db
+*.sqlite*
+logs/
+data/
+tmp/
+output/
+outputs/
+.DS_Store
+.idea/
+未命名文件夹/

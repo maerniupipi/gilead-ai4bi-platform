@@ -1,0 +1,13 @@
+{
+  "sync_date": "2026-11-18",
+  "source_base_commit": "ce03c2494c717d48b60f9eb344664bfb4d82ec10",
+  "source_head_commit": "6d2b0110d23c1c9b0181ff31bd91b6612c0655b1",
+  "target_base_commit": "e51537c02bf298ff857e6be926fddfe717c888b9",
+  "scope": "generic_platform_only",
+  "schema_tables": 70,
+  "backend_tests_passed": 1086,
+  "backend_subtests_passed": 41,
+  "frontend_tests_passed": 82,
+  "batch_python_tests_passed": 60,
+  "batch_frontend_tests_passed": 16
+}

@@ -1,0 +1,105 @@
+{
+  "$defs": {
+    "ResultColumn": {
+      "additionalProperties": true,
+      "properties": {
+        "key": {
+          "title": "Key",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "key",
+        "name"
+      ],
+      "title": "ResultColumn",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "enum": [
+        "1.0"
+      ],
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "dimensions": {
+      "items": {
+        "$ref": "#/$defs/ResultColumn"
+      },
+      "minItems": 1,
+      "title": "Dimensions",
+      "type": "array"
+    },
+    "series": {
+      "items": {
+        "$ref": "#/$defs/ResultColumn"
+      },
+      "minItems": 1,
+      "title": "Series",
+      "type": "array"
+    },
+    "rows": {
+      "items": {
+        "type": "object"
+      },
+      "title": "Rows",
+      "type": "array"
+    },
+    "unit": {
+      "title": "Unit",
+      "type": "string"
+    },
+    "chart_type": {
+      "enum": [
+        "bar",
+        "line",
+        "pie"
+      ],
+      "title": "Chart Type",
+      "type": "string"
+    },
+    "available_types": {
+      "items": {
+        "enum": [
+          "bar",
+          "line",
+          "pie"
+        ],
+        "type": "string"
+      },
+      "title": "Available Types",
+      "type": "array"
+    },
+    "data_ref": {
+      "anyOf": [
+        {
+          "format": "uuid",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Data Ref"
+    }
+  },
+  "required": [
+    "dimensions",
+    "series",
+    "rows",
+    "unit",
+    "chart_type",
+    "available_types",
+    "data_ref"
+  ],
+  "title": "ChartOutputs",
+  "type": "object"
+}
